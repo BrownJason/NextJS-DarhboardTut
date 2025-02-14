@@ -1,0 +1,18 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
+  "editor.autoIndent": "advanced",
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "debug.console.acceptSuggestionOnEnter": "off",
+  "editor.tabCompletion": "off",
+  "editor.quickSuggestions": {
+    "other": "off"
+  },
+  "terminal.integrated.suggest.quickSuggestions": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "[snippets]": {},
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.singleQuote": true
+}
