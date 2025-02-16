@@ -75,8 +75,16 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(query: string, currentPage: number) {
+let ITEMS_PER_PAGE = 6;
+
+export async function setItemsPerPage(invoicesCount: number) {
+  ITEMS_PER_PAGE = invoicesCount;
+
+  return ITEMS_PER_PAGE;
+}
+
+export async function fetchFilteredInvoices(query: string, currentPage: number, invoiceCount: number) {
+  ITEMS_PER_PAGE = invoiceCount;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {

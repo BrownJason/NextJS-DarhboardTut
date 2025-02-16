@@ -5,8 +5,9 @@ import { CreateInvoice } from '@/app/ui/invoices/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { fetchInvoicesPages, setItemsPerPage } from '@/app/lib/data';
 import { Metadata } from 'next';
+import InvoicesCount from './invoicesCount';
 
 export const metadata: Metadata = {
   title: 'Invoices',
@@ -16,12 +17,16 @@ export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
+    invoiceCount?: number;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
+  const invoicesCount = Number(searchParams?.invoiceCount) || 10;
   const totalPages = await fetchInvoicesPages(query);
+
+  console.log(invoicesCount);
 
   return (
     <div className="w-full">
@@ -32,8 +37,11 @@ export default async function Page(props: {
         <Search placeholder="Search invoices..." />
         <CreateInvoice />
       </div>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <InvoicesCount invoiceCount={invoicesCount} />
+      </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <Table query={query} currentPage={currentPage} invoiceCount={invoicesCount} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
