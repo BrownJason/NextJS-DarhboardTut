@@ -34,13 +34,6 @@ const LineChart = (props: { data: any[] }) => {
 
   const options = {
     responsive: true,
-    animations: {
-      duration: 1000,
-      easing: 'linear',
-      from: 1,
-      to: 0,
-      loop: true,
-    },
     scales: {
       x: {
         grid: {
