@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import { CustomerField, CustomersTableType, InvoiceForm, InvoicesTable, LatestInvoiceRaw, Revenue } from './definitions';
+import { CustomerField, CustomersTableType, Invoice, InvoiceForm, InvoicesTable, LatestInvoiceRaw, Revenue } from './definitions';
 import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
@@ -12,7 +12,8 @@ export async function fetchRevenue() {
     console.log('Fetching revenue data...');
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data = await sql<Revenue[]>`SELECT * FROM revenue`;
+    const data = await sql<Revenue[]>`SELECT * FROM revenue
+    ORDER BY to_date(month,'Mon')`;
 
     console.log('Data fetch completed after 3 seconds.');
 
@@ -125,6 +126,46 @@ export async function fetchInvoicesPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
+  }
+}
+
+export async function fetchAllInvoices() {
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const data = await sql<Invoice[]>`SELECT 
+      sum(amount / 100) amount, 
+      status
+    FROM invoices
+    GROUP BY status`;
+
+    console.log('Data fetch completed after 3 seconds.');
+
+    return data;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoices data.');
+  }
+}
+
+export async function fetchInvoiceByCustomer() {
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const data = await sql<Invoice[]>`SELECT 
+      sum(invoices.amount / 100) amount, 
+      customers.name
+    FROM invoices
+    JOIN customers on
+      invoices.customer_id = customers.id
+    GROUP BY customers.name`;
+
+    console.log('Data fetch completed after 3 seconds.');
+
+    return data;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoices data.');
   }
 }
 

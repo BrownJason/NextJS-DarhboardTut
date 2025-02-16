@@ -1,5 +1,4 @@
 import { lusitana } from '@/app/ui/fonts';
-import { Revenue } from '@/app/lib/definitions';
 import { fetchRevenue } from '@/app/lib/data';
 import 'chart.js/auto';
 import LineChart from './LineChart';

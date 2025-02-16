@@ -75,6 +75,14 @@ export async function createInvoice(prevState: State, formData: FormData) {
     console.error(error);
   }
 
+  try {
+    if (status === 'paid') {
+      updateRevenue(amountInCents / 100, date);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
@@ -110,6 +118,21 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
+}
+
+export async function updateRevenue(amount: number, date: string) {
+  try {
+    const dateMonth = new Date(date).getMonth();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    await sql`
+      UPDATE revenue
+      SET revenue = revenue + ${amount}
+      WHERE TO_DATE(${months[dateMonth]} , 'Mon') = TO_DATE(month, 'Mon');
+    `;
+  } catch (error) {
+    console.log('Database Error:', error);
+  }
 }
 
 export async function deleteInvoice(id: string) {
