@@ -22,7 +22,7 @@ const LineChart = (props: { data: any[] }) => {
     labels: months,
     datasets: [
       {
-        label: 'Monthly Revenue',
+        label: 'Monthly Revenue Paid',
         data: revenue,
         fill: false,
         borderColor: 'rgb(125, 0, 251)',

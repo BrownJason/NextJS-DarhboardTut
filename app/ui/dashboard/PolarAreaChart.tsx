@@ -20,12 +20,11 @@ const PolarAreaChart = (props: { data: any[] }) => {
     labels: customer,
     datasets: [
       {
-        label: 'Monthly Revenue',
+        label: 'Invoice Amount',
         data: revenue,
         borderColor: 'rgb(0, 0, 0)',
         borderWidth: 1,
         backgroundColor: ['#8fd7d7', '#00b0be', '#ff8ca1', '#f45f74', '#bdd373', '#98c127'],
-        textColor: 'dark:text-white',
       },
     ],
   };

@@ -15,12 +15,19 @@ export default function InvoicesCount({ invoiceCount }: { invoiceCount: number }
     replace(`${pathname}?${params.toString()}`);
   });
 
+  const options = [...Array.from({ length: 20 }, (_, i: number) => (i + 1) * 5)];
+
   return (
     <select onChange={(e) => handleOnChange(e.target.value)} className="dark:bg-gray-600" defaultValue={searchParams.get('invoiceCount')?.toString()}>
-      <option value="10">10</option>
-      <option value="20">20</option>
-      <option value="30">30</option>
-      <option value="40">40</option>
+      {options?.map((option) => {
+        console.log(option);
+        return (
+          <option value={option} key={option}>
+            {option}
+          </option>
+        );
+      })}
+      ;
     </select>
   );
 }

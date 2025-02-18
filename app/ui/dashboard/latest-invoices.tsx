@@ -11,16 +11,16 @@ export default async function LatestInvoices() {
     <div className="flex w-full flex-col md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>Latest Invoices</h2>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4 dark:bg-gray-600">
-        <div className="bg-white px-6 dark:bg-gray-600">
+        <div className="bg-white rounded-xl px-6 dark:bg-gray-500">
           {latestInvoices.map((invoice, i) => {
             return (
               <div
                 key={invoice.id}
-                className={clsx('flex flex-row items-center justify-between py-4 dark:bg-gray-600', {
+                className={clsx('flex flex-row items-center justify-between py-4 dark:bg-gray-500', {
                   'border-t': i !== 0,
                 })}
               >
-                <div className="flex items-center dark:bg-gray-600">
+                <div className="flex items-center dark:bg-gray-500">
                   <Image src={invoice.image_url} alt={`${invoice.name}'s profile picture`} className="mr-4 rounded-full" width={32} height={32} />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">{invoice.name}</p>

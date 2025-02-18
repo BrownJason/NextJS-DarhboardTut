@@ -75,7 +75,7 @@ export async function fetchCardData() {
   }
 }
 
-let ITEMS_PER_PAGE = 6;
+let ITEMS_PER_PAGE = 5;
 
 export async function setItemsPerPage(invoicesCount: number) {
   ITEMS_PER_PAGE = invoicesCount;

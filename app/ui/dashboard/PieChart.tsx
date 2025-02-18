@@ -18,10 +18,9 @@ const PieChart = (props: { data: any[] }) => {
   });
 
   const data = {
-    labels: status,
+    labels: ['Pending', 'Paid'],
     datasets: [
       {
-        label: 'Monthly Revenue',
         data: revenue,
         borderColor: 'rgb(0, 0, 0)',
         borderWidth: 1,

@@ -23,7 +23,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const invoicesCount = Number(searchParams?.invoiceCount) || 10;
+  const invoicesCount = Number(searchParams?.invoiceCount) || 5;
   const totalPages = await fetchInvoicesPages(query);
 
   console.log(invoicesCount);
@@ -37,8 +37,8 @@ export default async function Page(props: {
         <Search placeholder="Search invoices..." />
         <CreateInvoice />
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <InvoicesCount invoiceCount={invoicesCount} />
+      <div className="mt-4 flex items-center justify-end page-end gap-2 md:mt-8">
+        Invoices per page: <InvoicesCount invoiceCount={invoicesCount} />
       </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} invoiceCount={invoicesCount} />
