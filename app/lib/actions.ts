@@ -37,6 +37,55 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
+const FormSchemaCustomer = z.object({
+  customerId: z.string(),
+  name: z.string(),
+  email: z.string({
+    invalid_type_error: 'Please enter correct email with @*.com',
+  }),
+  imageUrl: z.string(),
+});
+
+const CreateCustomer = FormSchemaCustomer.omit({ customerId: true });
+
+export type CustomerState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    imageUrl?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createCustomer(prevState: CustomerState, formData: FormData) {
+  const validatedFields = CreateCustomer.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    imageUrl: formData.get('imageUrl'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Customer',
+    };
+  }
+
+  const { name, email, imageUrl } = validatedFields.data;
+
+  try {
+    await sql` 
+      INSERT INTO customers (name, email, image_url)
+      VALUES (${name}, ${email}, ${imageUrl});
+    `;
+  } catch (error) {
+    console.error(error);
+  }
+
+  revalidatePath('/dashboard/customers');
+  redirect('/dashboard/customers');
+}
+
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 
 export type State = {
@@ -116,6 +165,20 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     return { message: 'Database Error: Failed to Update Invoice.' };
   }
 
+  try {
+    if (status === 'paid') {
+      await sql`
+      UPDATE revenue
+      SET revenue = revenue + ${amount}
+      WHERE month = (SELECT TO_CHAR(date, 'Mon') FROM invoices
+        WHERE id = ${id}
+         AND customer_id = ${customerId})
+      `;
+    }
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Revenue on Paid Invoice Update.' };
+  }
+
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
@@ -127,7 +190,8 @@ export async function updateRevenue(amount: number, date: string) {
 
     await sql`
       UPDATE revenue
-      SET revenue = revenue + ${amount}
+      SET revenue = revenue + ${amount},
+          year = TO_NUMBER(TO_CHAR(date, 'yyyy'))
       WHERE TO_DATE(${months[dateMonth]} , 'Mon') = TO_DATE(month, 'Mon');
     `;
   } catch (error) {

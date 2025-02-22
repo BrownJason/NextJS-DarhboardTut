@@ -1,21 +1,27 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 import 'chart.js/auto';
 import { Chart, registerables } from 'chart.js/auto';
 
 Chart.register(...registerables);
 
-const LineChart = (props: { data: any[] }) => {
+const LineChart = (props: { data: any[]; years: number[]; year: number }) => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
   const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), {
     ssr: false,
   });
 
-  const months = props.data.map((months) => {
-    return months.month;
-  });
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  const revenue = props.data.map((revenues) => {
-    return revenues.revenue;
+  const handleOnChange = useDebouncedCallback((term: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('year', term);
+    replace(`${pathname}?${params.toString()}`);
   });
 
   const data = {
@@ -23,7 +29,7 @@ const LineChart = (props: { data: any[] }) => {
     datasets: [
       {
         label: 'Monthly Revenue Paid',
-        data: revenue,
+        data: props.data,
         fill: false,
         borderColor: 'rgb(125, 0, 251)',
         borderWidth: 1,
@@ -66,6 +72,19 @@ const LineChart = (props: { data: any[] }) => {
 
   return (
     <div className="dark:text-white">
+      <div className="text-right align-middle">
+        Revenue By Year:{' '}
+        <select onChange={(e) => handleOnChange(e.target.value)} className="dark:bg-gray-600 font-size-50" defaultValue={searchParams.get('year')?.toString()}>
+          {props.years?.map((years) => {
+            return (
+              <option value={years} key={years}>
+                {years}
+              </option>
+            );
+          })}
+          ;
+        </select>
+      </div>
       <Line data={data} options={options} />
     </div>
   );
