@@ -82,7 +82,6 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
     console.error(error);
   }
 
-  revalidatePath('/dashboard/customers');
   redirect('/dashboard/customers');
 }
 
@@ -132,7 +131,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
     console.log(error);
   }
 
-  revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
 
@@ -179,7 +177,6 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     return { message: 'Database Error: Failed to Update Revenue on Paid Invoice Update.' };
   }
 
-  revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
 
@@ -205,6 +202,4 @@ export async function deleteInvoice(id: string) {
   } catch (error) {
     console.error(error);
   }
-
-  revalidatePath('/dashboard/invoices');
 }

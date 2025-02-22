@@ -34,7 +34,6 @@ const PolarAreaChart = (props: { data: any[] }) => {
   });
 
   const options = {
-    responsive: true,
     scales: {
       r: {
         grid: {

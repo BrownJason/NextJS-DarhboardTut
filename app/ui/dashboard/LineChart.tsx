@@ -39,7 +39,6 @@ const LineChart = (props: { data: any[]; years: number[]; year: number }) => {
   };
 
   const options = {
-    responsive: true,
     scales: {
       x: {
         grid: {

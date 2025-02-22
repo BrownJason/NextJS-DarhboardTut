@@ -2,15 +2,13 @@
 import dynamic from 'next/dynamic';
 import 'chart.js/auto';
 import { Chart, registerables } from 'chart.js/auto';
+import { cache } from 'react';
 
 Chart.register(...registerables);
 
 const PieChart = (props: { data: any[] }) => {
   const Pie = dynamic(() => import('react-chartjs-2').then((mod) => mod.Pie), {
     ssr: false,
-  });
-  const status = props.data.map((status) => {
-    return status.status;
   });
 
   const revenue = props.data.map((a) => {
@@ -29,10 +27,7 @@ const PieChart = (props: { data: any[] }) => {
     ],
   };
 
-  const options = {
-    responsive: true,
-  };
-
-  return <Pie data={data} options={options} />;
+  return <Pie data={data} />;
 };
+
 export default PieChart;

@@ -2,9 +2,12 @@ import { lusitana } from '@/app/ui/fonts';
 import { fetchRevenue } from '@/app/lib/data';
 import 'chart.js/auto';
 import LineChart from './LineChart';
+import { unstable_cache } from 'next/cache';
+
+const getCachedRevenue = unstable_cache(async () => fetchRevenue(), ['revenue'], { revalidate: 4000 });
 
 export default async function RevenueChart(year: { year: number }) {
-  const revenue = await fetchRevenue();
+  const revenue = await getCachedRevenue();
   const yearToUse = year.year;
 
   const years = revenue
@@ -36,9 +39,6 @@ export default async function RevenueChart(year: { year: number }) {
   });
 
   const revenueResults = revenueToUse.sort((a, b) => months.indexOf(a.month) - months.indexOf(b.month)).map((res) => res.revenue);
-
-  console.log(year.year);
-  console.log(revenueResults);
 
   return (
     <div className="w-full md:col-span-4">
